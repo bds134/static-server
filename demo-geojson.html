@@ -26,6 +26,7 @@
     <option value="Museum">Museum</option>
   </select>
   <div id="map"></div>
+  <button id="download-csv" style="margin-top:1em;">Download Filtered List as CSV</button>
   <div class="entity-list" id="entity-list">
     <!-- Entities will be listed here. Use search and category to filter. -->
   </div>
@@ -61,6 +62,7 @@
     }
 
     // Update entity list and map markers
+    let lastFilteredFeatures = [];
     function updateListAndMap(searchTerm, category) {
       const listDiv = document.getElementById('entity-list');
       listDiv.innerHTML = '';
@@ -75,6 +77,7 @@
         const matchesName = f.properties.name.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesName && matchesCategory;
       });
+      lastFilteredFeatures = features;
       if (features.length === 0) {
         listDiv.innerHTML = '<em>No entities found.</em>';
         map.setView([40.75, -73.98], 12);
@@ -106,6 +109,32 @@
     }
     searchInput.addEventListener('input', triggerUpdate);
     categorySelect.addEventListener('change', triggerUpdate);
+    // Download CSV feature
+    document.getElementById('download-csv').addEventListener('click', function() {
+      if (!lastFilteredFeatures || lastFilteredFeatures.length === 0) {
+        alert('No entities to download.');
+        return;
+      }
+      // CSV header
+      let csv = 'Name,Category,Longitude,Latitude\n';
+      lastFilteredFeatures.forEach(f => {
+        const name = f.properties.name.replace(/"/g, '""');
+        const category = f.properties.category.replace(/"/g, '""');
+        const lon = f.geometry.coordinates[0];
+        const lat = f.geometry.coordinates[1];
+        csv += `"${name}","${category}",${lon},${lat}\n`;
+      });
+      // Download
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'entities.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
   </script>
 </body>
 </html>
