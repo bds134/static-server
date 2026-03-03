@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <meta charset="UTF-8">
   <title>NYC Travel Guide (TEI XML)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,6 +22,8 @@
   </nav>
   <h1 class="mt-4 mb-4 text-center">NYC Travel Guide (TEI XML)</h1>
   <div class="card p-4 mb-4 shadow-sm">
+    <h2 class="mb-3">Map of Featured Sites</h2>
+    <div id="tei-map" style="height: 300px; border-radius: 0.5em; margin-bottom: 2em;"></div>
     <h2 class="mb-3">Featured Sites (Marked-up Text)</h2>
     <p>
       Welcome to New York City! This travel guide will take you to some of the city's most famous sites:
@@ -58,12 +61,70 @@
       <a href="demo-geojson.html" class="btn btn-primary">Go to Map & Search</a>
     </div>
   </div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // Example: highlight site on click, could be extended to show info or link to map
+    // Mapping from TEI ref to coordinates and display name (from geojson)
+    const teiSites = {
+      empire_state_building: {
+        name: "Empire State Building",
+        coords: [40.7484, -73.9857]
+      },
+      statue_of_liberty: {
+        name: "Statue of Liberty",
+        coords: [40.6892, -74.0445]
+      },
+      grand_central_terminal: {
+        name: "Grand Central Terminal",
+        coords: [40.7527, -73.9772]
+      },
+      central_park: {
+        name: "Central Park",
+        coords: [40.7829, -73.9654]
+      },
+      museum_of_modern_art: {
+        name: "Museum of Modern Art",
+        coords: [40.7614, -73.9787]
+      },
+      metropolitan_museum_of_art: {
+        name: "Metropolitan Museum of Art",
+        coords: [40.7794, -73.9680]
+      },
+      columbus_circle: {
+        name: "Columbus Circle",
+        coords: [40.7681, -73.9819]
+      },
+      times_square: {
+        name: "Times Square",
+        coords: [40.7580, -73.9851]
+      },
+      washington_square_park: {
+        name: "Washington Square Park",
+        coords: [40.7308, -73.9978]
+      }
+    };
+
+    // Initialize Leaflet map
+    const map = L.map('tei-map').setView([40.75, -73.98], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    const markersLayer = L.layerGroup().addTo(map);
+    Object.keys(teiSites).forEach(key => {
+      const site = teiSites[key];
+      const marker = L.marker(site.coords).addTo(markersLayer);
+      marker.bindPopup(`<b>${site.name}</b>`);
+    });
+
+    // Highlight site name on click
     document.querySelectorAll('.site-link').forEach(function(el) {
       el.addEventListener('click', function() {
         el.style.background = '#0d6efd';
         el.style.color = '#fff';
+        // Pan map to marker
+        const ref = el.getAttribute('data-ref');
+        if (teiSites[ref]) {
+          map.setView(teiSites[ref].coords, 15);
+        }
         setTimeout(() => {
           el.style.background = '';
           el.style.color = '';
