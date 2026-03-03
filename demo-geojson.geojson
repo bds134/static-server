@@ -45,5 +45,61 @@
         "category": "Park"
       }
     }
+
+    ,{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9787, 40.7614]
+      },
+      "properties": {
+        "name": "Museum of Modern Art",
+        "category": "Museum"
+      }
+    }
+    ,{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9680, 40.7794]
+      },
+      "properties": {
+        "name": "Metropolitan Museum of Art",
+        "category": "Museum"
+      }
+    }
+    ,{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9819, 40.7681]
+      },
+      "properties": {
+        "name": "Columbus Circle",
+        "category": "Landmark"
+      }
+    }
+    ,{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9851, 40.7580]
+      },
+      "properties": {
+        "name": "Times Square",
+        "category": "Landmark"
+      }
+    }
+    ,{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9978, 40.7308]
+      },
+      "properties": {
+        "name": "Washington Square Park",
+        "category": "Park"
+      }
+    }
   ]
 }
