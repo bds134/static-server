@@ -1,0 +1,49 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9857, 40.7484]
+      },
+      "properties": {
+        "name": "Empire State Building",
+        "category": "Landmark"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.0445, 40.6892]
+      },
+      "properties": {
+        "name": "Statue of Liberty",
+        "category": "Monument"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9772, 40.7527]
+      },
+      "properties": {
+        "name": "Grand Central Terminal",
+        "category": "Transport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9654, 40.7829]
+      },
+      "properties": {
+        "name": "Central Park",
+        "category": "Park"
+      }
+    }
+  ]
+}

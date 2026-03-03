@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoJSON Search & Map Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 300px; margin-top: 1em; }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; }
+    .entity-list { margin-top: 1em; }
+    .entity-item { margin-bottom: 0.5em; }
+  </style>
+</head>
+<body>
+  <h1>GeoJSON Search & Map Demo</h1>
+  <label for="search">Search by name:</label>
+  <input type="text" id="search" placeholder="Type to search..." />
+  <label for="category">Category:</label>
+  <select id="category">
+    <option value="">All</option>
+    <option value="Landmark">Landmark</option>
+    <option value="Monument">Monument</option>
+    <option value="Transport">Transport</option>
+    <option value="Park">Park</option>
+  </select>
+  <div class="entity-list" id="entity-list"></div>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    let geojsonData;
+    let map, markersLayer;
+
+    // Load GeoJSON with error handling
+    fetch('demo-geojson.geojson')
+      .then(res => {
+        if (!res.ok) throw new Error('GeoJSON file not found or server error');
+        return res.json();
+      })
+      .then(data => {
+        geojsonData = data;
+        initMap();
+        // Show all entities on initial load
+        updateListAndMap('', '');
+      })
+      .catch(err => {
+        document.getElementById('entity-list').innerHTML = `<span style='color:red'>Error loading GeoJSON: ${err.message}</span>`;
+        document.getElementById('map').innerHTML = '';
+      });
+
+    // Initialize map
+    function initMap() {
+      map = L.map('map').setView([40.75, -73.98], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+      markersLayer = L.layerGroup().addTo(map);
+    }
+
+    // Update entity list and map markers
+    function updateListAndMap(searchTerm, category) {
+      const listDiv = document.getElementById('entity-list');
+      listDiv.innerHTML = '';
+      markersLayer.clearLayers();
+      const features = geojsonData.features.filter(f => {
+        const selectedCategory = category.trim().toLowerCase();
+        const featureCategory = (f.properties.category || '').trim().toLowerCase();
+        const matchesCategory = !selectedCategory || featureCategory === selectedCategory;
+        if (!searchTerm) {
+          return matchesCategory;
+        }
+        const matchesName = f.properties.name.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesName && matchesCategory;
+      });
+      if (features.length === 0) {
+        listDiv.innerHTML = '<em>No entities found.</em>';
+        map.setView([40.75, -73.98], 12);
+        return;
+      }
+      features.forEach(f => {
+        // List
+        const item = document.createElement('div');
+        item.className = 'entity-item';
+        item.textContent = `${f.properties.name} (${f.properties.category})`;
+        listDiv.appendChild(item);
+        // Map marker
+        const coords = f.geometry.coordinates;
+        const marker = L.marker([coords[1], coords[0]]).addTo(markersLayer);
+        marker.bindPopup(`<b>${f.properties.name}</b><br>${f.properties.category}`);
+      });
+      // Fit map to markers
+      if (features.length) {
+        const bounds = L.latLngBounds(features.map(f => [f.geometry.coordinates[1], f.geometry.coordinates[0]]));
+        map.fitBounds(bounds, { maxZoom: 14 });
+      }
+    }
+
+    // Search and category events
+    const searchInput = document.getElementById('search');
+    const categorySelect = document.getElementById('category');
+    function triggerUpdate() {
+      updateListAndMap(searchInput.value, categorySelect.value);
+    }
+    searchInput.addEventListener('input', triggerUpdate);
+    categorySelect.addEventListener('change', triggerUpdate);
+  </script>
+</body>
+</html>
