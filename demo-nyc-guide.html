@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NYC Travel Guide (TEI XML)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/bootstrap-dark.min.css" rel="stylesheet" crossorigin="anonymous">
+  <style>
+    body { background: #181a1b; color: #e0e0e0; max-width: 700px; margin: auto; }
+    .card { background: #23272b; border: 1px solid #343a40; color: #e0e0e0; }
+    h1 { color: #fff; text-shadow: 0 2px 8px #000; }
+    .site-link { color: #0d6efd; text-decoration: underline; cursor: pointer; }
+    .site-link:hover { color: #0b5ed7; }
+    .nav-link { color: #fff; }
+  </style>
+</head>
+<body>
+  <nav class="mb-4">
+    <a href="demo-geojson.html" class="nav-link">← Back to Map & Search</a>
+  </nav>
+  <h1 class="mt-4 mb-4 text-center">NYC Travel Guide (TEI XML)</h1>
+  <div class="card p-4 mb-4 shadow-sm">
+    <h2 class="mb-3">Featured Sites (Marked-up Text)</h2>
+    <p>
+      Welcome to New York City! This travel guide will take you to some of the city's most famous sites:
+      <span class="site-link" data-ref="empire_state_building">Empire State Building</span>, a towering landmark in Midtown Manhattan.<br>
+      Next, visit the historic <span class="site-link" data-ref="statue_of_liberty">Statue of Liberty</span> on Liberty Island, a symbol of freedom.<br>
+      For a glimpse of New York's bustling transit, stop by <span class="site-link" data-ref="grand_central_terminal">Grand Central Terminal</span>.<br>
+      Enjoy nature at <span class="site-link" data-ref="central_park">Central Park</span>, the city's iconic green space.<br>
+      Art lovers should explore the <span class="site-link" data-ref="museum_of_modern_art">Museum of Modern Art</span> and the grand <span class="site-link" data-ref="metropolitan_museum_of_art">Metropolitan Museum of Art</span>.<br>
+      Don't miss <span class="site-link" data-ref="columbus_circle">Columbus Circle</span>, a major landmark and gateway to Central Park.<br>
+      Experience the energy of <span class="site-link" data-ref="times_square">Times Square</span>, famous for its lights and crowds.<br>
+      Finally, relax at <span class="site-link" data-ref="washington_square_park">Washington Square Park</span>, a lively spot in Greenwich Village.
+    </p>
+    <hr class="my-4">
+    <h2 class="mb-3">Raw TEI XML</h2>
+    <pre style="background:#181a1b; color:#e0e0e0; border-radius:0.5em; padding:1em; font-size:0.95em; overflow-x:auto;">
+&lt;TEI xmlns="http://www.tei-c.org/ns/1.0"&gt;
+  &lt;text&gt;
+    &lt;body&gt;
+      &lt;p&gt;
+        Welcome to New York City! This travel guide will take you to some of the city's most famous sites:
+        &lt;placeName ref="geojson:empire_state_building"&gt;Empire State Building&lt;/placeName&gt;, a towering landmark in Midtown Manhattan.
+        Next, visit the historic &lt;placeName ref="geojson:statue_of_liberty"&gt;Statue of Liberty&lt;/placeName&gt; on Liberty Island, a symbol of freedom.
+        For a glimpse of New York's bustling transit, stop by &lt;placeName ref="geojson:grand_central_terminal"&gt;Grand Central Terminal&lt;/placeName&gt;.
+        Enjoy nature at &lt;placeName ref="geojson:central_park"&gt;Central Park&lt;/placeName&gt;, the city's iconic green space.
+        Art lovers should explore the &lt;placeName ref="geojson:museum_of_modern_art"&gt;Museum of Modern Art&lt;/placeName&gt; and the grand &lt;placeName ref="geojson:metropolitan_museum_of_art"&gt;Metropolitan Museum of Art&lt;/placeName&gt;.
+        Don't miss &lt;placeName ref="geojson:columbus_circle"&gt;Columbus Circle&lt;/placeName&gt;, a major landmark and gateway to Central Park.
+        Experience the energy of &lt;placeName ref="geojson:times_square"&gt;Times Square&lt;/placeName&gt;, famous for its lights and crowds.
+        Finally, relax at &lt;placeName ref="geojson:washington_square_park"&gt;Washington Square Park&lt;/placeName&gt;, a lively spot in Greenwich Village.
+      &lt;/p&gt;
+    &lt;/body&gt;
+  &lt;/text&gt;
+&lt;/TEI&gt;
+    </pre>
+    <div class="mt-4">
+      <a href="demo-geojson.html" class="btn btn-primary">Go to Map & Search</a>
+    </div>
+  </div>
+  <script>
+    // Example: highlight site on click, could be extended to show info or link to map
+    document.querySelectorAll('.site-link').forEach(function(el) {
+      el.addEventListener('click', function() {
+        el.style.background = '#0d6efd';
+        el.style.color = '#fff';
+        setTimeout(() => {
+          el.style.background = '';
+          el.style.color = '';
+        }, 600);
+      });
+    });
+  </script>
+</body>
+</html>
