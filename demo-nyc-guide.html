@@ -176,3 +176,11 @@
         document.getElementById('tei-xml-content').textContent = 'Error loading XML: ' + error.message;
         console.error('Failed to load TEI XML:', error);
       });
+
+    // Invalidate map size after content loads to ensure proper rendering
+    setTimeout(function() {
+      map.invalidateSize();
+    }, 500);
+  </script>
+</body>
+</html>
