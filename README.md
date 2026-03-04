@@ -3,7 +3,7 @@
 ## Overview
 This test site demonstrates two complementary approaches for visualizing and interacting with historical geographic data extracted from historical sources:
 
-1. **GeoJSON Approach** ([demo-geojson.html](demo-geojson.html)): A searchable/filterable list of entities with map visualization
+1. **GeoJSON Approach** ([demo-geojson.html](demo-geojson.html)): An interactive travel guide driven by GeoJSON data with searchable/filterable list of entities and map visualization
 2. **TEI XML Approach** ([demo-xml.html](demo-xml.html)): An interactive travel guide that dynamically parses TEI XML to populate a map, links, and raw markup display
 
 Both approaches show how data from sources can be extracted, remediated, and published online as interactive, web-based experiences.
