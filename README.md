@@ -8,6 +8,11 @@ This test site demonstrates two complementary approaches for visualizing and int
 
 Both approaches show how data from sources can be extracted, remediated, and published online as interactive, web-based experiences.
 
+## Live Demo
+View the live demonstrations on GitHub Pages:
+- **[GeoJSON Demo](https://bds134.github.io/static-server/demo-geojson.html)** - Search and filter entities with interactive map
+- **[TEI XML Travel Guide](https://bds134.github.io/static-server/demo-nyc-guide.html)** - Dynamic travel guide with markup parsing
+
 ---
 
 ## Page 1: GeoJSON Map & Entity List ([demo-geojson.html](demo-geojson.html))
