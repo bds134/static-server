@@ -4,14 +4,14 @@
 This test site demonstrates two complementary approaches for visualizing and interacting with historical geographic data extracted from historical sources:
 
 1. **GeoJSON Approach** ([demo-geojson.html](demo-geojson.html)): A searchable/filterable list of entities with map visualization
-2. **TEI XML Approach** ([demo-nyc-guide.html](demo-nyc-guide.html)): An interactive travel guide that dynamically parses TEI XML to populate a map, links, and raw markup display
+2. **TEI XML Approach** ([demo-xml.html](demo-xml.html)): An interactive travel guide that dynamically parses TEI XML to populate a map, links, and raw markup display
 
 Both approaches show how data from sources can be extracted, remediated, and published online as interactive, web-based experiences.
 
 ## Live Demo
 View the live demonstrations on GitHub Pages:
 - **[GeoJSON Demo](https://bds134.github.io/static-server/demo-geojson.html)** - Search and filter entities with interactive map
-- **[TEI XML Travel Guide](https://bds134.github.io/static-server/demo-nyc-guide.html)** - Dynamic travel guide with markup parsing
+- **[TEI XML Travel Guide](https://bds134.github.io/static-server/demo-xml.html)** - Dynamic travel guide with markup parsing
 
 ---
 
@@ -55,7 +55,7 @@ A student extracts place names and coordinates from a medieval Latin chronicle u
 
 ---
 
-## Page 2: TEI XML Travel Guide ([demo-nyc-guide.html](demo-nyc-guide.html))
+## Page 2: TEI XML Travel Guide ([demo-xml.html](demo-xml.html))
 
 ### Logic & Workflow
 1. **Data Markup**: Historical or descriptive text is marked up using TEI (Text Encoding Initiative) XML, with place names encoded as `<placeName>` elements and tagged with geospatial references.
