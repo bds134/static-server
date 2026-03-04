@@ -53,6 +53,34 @@ A student extracts place names and coordinates from a medieval Latin chronicle u
 - Use the search and filter controls to explore the data.
 - Download the filtered entity list as CSV for further analysis.
 
+### Converting CSV or RDBMS Data to GeoJSON
+If your data is stored in a CSV file or relational database, you can easily convert it to GeoJSON using Python and the `geopandas` library:
+
+```python
+import geopandas as gpd
+from shapely.geometry import Point
+
+# From CSV
+df = pd.read_csv('places.csv')  # Must have columns: name, latitude, longitude, category
+geometry = [Point(xy) for xy in zip(df.longitude, df.latitude)]
+gdf = gpd.GeoDataFrame(df, geometry=geometry, crs='EPSG:4326')
+gdf.to_file('places.geojson', driver='GeoJSON')
+
+# From RDBMS (e.g., PostGIS)
+from sqlalchemy import create_engine
+engine = create_engine('postgresql://user:password@localhost/mydb')
+gdf = gpd.read_postgis('SELECT * FROM places', engine, geom_col='geometry')
+gdf.to_file('places.geojson', driver='GeoJSON')
+```
+
+**Prerequisites**: Install geopandas and pandas: `pip install geopandas pandas`
+
+**Key points**:
+- CSV must contain numeric latitude/longitude columns (WGS84 coordinates, EPSG:4326)
+- GeoDataFrame automatically handles coordinate order and CRS (coordinate reference system)
+- Additional properties (name, category, etc.) are preserved in the GeoJSON properties object
+- Output GeoJSON is transparent and can be edited in any text editor if needed
+
 ---
 
 ## Page 2: TEI XML Demo ([demo-xml.html](demo-xml.html))
