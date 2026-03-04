@@ -39,25 +39,7 @@
     </p>
     <hr class="my-4">
     <h2 class="mb-3">Raw TEI XML</h2>
-    <pre style="background:#181a1b; color:#e0e0e0; border-radius:0.5em; padding:1em; font-size:0.95em; overflow-x:auto;">
-&lt;TEI xmlns="http://www.tei-c.org/ns/1.0"&gt;
-  &lt;text&gt;
-    &lt;body&gt;
-      &lt;p&gt;
-        Welcome to New York City! This travel guide will take you to some of the city's most famous sites:
-        &lt;placeName ref="geojson:empire_state_building"&gt;Empire State Building&lt;/placeName&gt;, a towering landmark in Midtown Manhattan.
-        Next, visit the historic &lt;placeName ref="geojson:statue_of_liberty"&gt;Statue of Liberty&lt;/placeName&gt; on Liberty Island, a symbol of freedom.
-        For a glimpse of New York's bustling transit, stop by &lt;placeName ref="geojson:grand_central_terminal"&gt;Grand Central Terminal&lt;/placeName&gt;.
-        Enjoy nature at &lt;placeName ref="geojson:central_park"&gt;Central Park&lt;/placeName&gt;, the city's iconic green space.
-        Art lovers should explore the &lt;placeName ref="geojson:museum_of_modern_art"&gt;Museum of Modern Art&lt;/placeName&gt; and the grand &lt;placeName ref="geojson:metropolitan_museum_of_art"&gt;Metropolitan Museum of Art&lt;/placeName&gt;.
-        Don't miss &lt;placeName ref="geojson:columbus_circle"&gt;Columbus Circle&lt;/placeName&gt;, a major landmark and gateway to Central Park.
-        Experience the energy of &lt;placeName ref="geojson:times_square"&gt;Times Square&lt;/placeName&gt;, famous for its lights and crowds.
-        Finally, relax at &lt;placeName ref="geojson:washington_square_park"&gt;Washington Square Park&lt;/placeName&gt;, a lively spot in Greenwich Village.
-      &lt;/p&gt;
-    &lt;/body&gt;
-  &lt;/text&gt;
-&lt;/TEI&gt;
-    </pre>
+    <pre id="tei-xml-content" style="background:#181a1b; color:#e0e0e0; border-radius:0.5em; padding:1em; font-size:0.95em; overflow-x:auto;">Loading...</pre>
     <div class="mt-4">
       <a href="demo-geojson.html" class="btn btn-primary">Go to Map & Search</a>
     </div>
@@ -154,6 +136,21 @@
         }
       });
     });
-  </script>
-</body>
-</html>
+
+    // Load and display the TEI XML file
+    fetch('demo-nyc-guide-tei.xml')
+      .then(response => response.text())
+      .then(xmlText => {
+        // Format the XML with proper indentation for display
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+        const serializer = new XMLSerializer();
+        const formattedXml = serializer.serializeToString(xmlDoc);
+        // Escape for HTML display
+        const escaped = formattedXml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        document.getElementById('tei-xml-content').textContent = escaped;
+      })
+      .catch(error => {
+        document.getElementById('tei-xml-content').textContent = 'Error loading XML: ' + error.message;
+        console.error('Failed to load TEI XML:', error);
+      });
