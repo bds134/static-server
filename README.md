@@ -61,11 +61,12 @@ A student extracts place names and coordinates from a medieval Latin chronicle u
    - **Raw XML Display**: The original TEI markup is displayed for inspection and transparency
 
 ### How It Works
-- The page loads the TEI XML file (e.g., `demo-nyc-guide-tei.xml`), which contains text with `<placeName>` elements marked with `ref` attributes (e.g., `ref="geojson:empire_state_building"`).
-- JavaScript extracts place names and their references, mapping each reference to coordinates in the `teiSites` JavaScript object.
+- The page loads the TEI XML file (e.g., `demo-nyc-guide-tei.xml`), which contains text with `<placeName>` elements marked with `ref`, `lat`, and `lon` attributes.
+- Example: `<placeName ref="empire_state_building" lat="40.7484" lon="-73.9857">Empire State Building</placeName>`
+- JavaScript extracts place names and their geospatial coordinates directly from the XML attributes—no separate hardcoded mapping is needed.
 - The **Featured Sites (Marked-up Text)** section is dynamically populated by converting XML `<placeName>` elements into clickable `<span>` elements with appropriate CSS classes.
 - Clicking a site link highlights it visually (red) and pans the map to show the corresponding marker with a popup.
-- The **Map of Featured Sites** section renders all place references from the XML as interactive map markers.
+- The **Map of Featured Sites** section renders all place references from the XML as interactive map markers using the lat/lon coordinates embedded in the markup.
 - The **Raw TEI XML** section displays the original XML file as plain text, preserving its structure for inspection and validation.
 
 ### Pros
@@ -78,21 +79,24 @@ A student extracts place names and coordinates from a medieval Latin chronicle u
 ### Cons
 - **Manual Markup**: TEI encoding must be done manually or with specialized tools. OCR solutions do not automatically produce TEI XML.
 - **Limited Scale**: Ideal for smaller, curated texts (e.g., travel guides, chronicles). Large documents with thousands of place names may become unwieldy.
-- **Hardcoded Coordinates**: Coordinate data for sites is currently hardcoded in the JavaScript `teiSites` object. A more scalable approach would fetch coordinates from an external GeoJSON file or database, or include coordinate data within the TEI XML itself.
 
-### Relationship to GeoJSON
-- Unlike the GeoJSON page ([demo-geojson.html](demo-geojson.html)), this page does not load a separate `.geojson` file for the map display.
-- Instead, coordinates are hardcoded in the `teiSites` JavaScript object, which maps site references (e.g., `empire_state_building`) to names and coordinates.
-- **Future enhancement**: Store coordinates in a GeoJSON file and load them dynamically, so the page can work with new sites without editing JavaScript code. This would bridge both approaches and allow the TEI page to be as data-driven as the GeoJSON page.
+### Self-Contained Data Model
+- Unlike traditional approaches, this page **does not require a separate coordinates file or hardcoded JavaScript mappings**.
+- All geographic data is embedded directly in the TEI XML as `lat` and `lon` attributes on `<placeName>` elements.
+- This makes the XML fully self-contained and data-driven: add new sites by simply adding new `<placeName>` elements with coordinates. No JavaScript modifications needed.
+- The page is also fully generic—new TEI files can be used by simply changing the fetch URL, and the same code will work automatically.
 
 ### Example Use Case
 A student creates a TEI-marked travel guide to New York City, tagging major landmarks as `<placeName>` elements with unique refs. The guide is published using this template, allowing readers to click on landmarks in the text to see them highlighted on the map, and to view the underlying TEI markup for educational purposes.
 
 ### How to Use the TEI Page
-- Create or edit a TEI XML file (e.g., `demo-nyc-guide-tei.xml`), marking place names with `<placeName ref="geojson:SITE_ID">` elements.
-- Update the `teiSites` object in [demo-nyc-guide.html](demo-nyc-guide.html) to include site coordinates for each reference ID you use in the XML.
-- The page automatically fetches the XML, parses it, and populates the map, featured sites links, and raw XML display.
-- No additional configuration is needed beyond updating these two data sources.
+- Create or edit a TEI XML file (e.g., `demo-nyc-guide-tei.xml`).
+- Mark place names with `<placeName>` elements and include `ref`, `lat`, and `lon` attributes:
+  ```xml
+  <placeName ref="unique_id" lat="40.7580" lon="-73.9851">Site Name</placeName>
+  ```
+- The page automatically fetches the XML, parses it, extracts coordinates from the attributes, and populates the map, featured sites links, and raw XML display.
+- No additional configuration is needed—all data is contained in the XML file itself.
 
 ---
 

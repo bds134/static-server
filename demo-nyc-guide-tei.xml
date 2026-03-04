@@ -3,14 +3,14 @@
     <body>
       <p>
         Welcome to New York City! This travel guide will take you to some of the city's most famous sites:
-        <placeName ref="geojson:empire_state_building">Empire State Building</placeName>, a towering landmark in Midtown Manhattan.
-        Next, visit the historic <placeName ref="geojson:statue_of_liberty">Statue of Liberty</placeName> on Liberty Island, a symbol of freedom.
-        For a glimpse of New York's bustling transit, stop by <placeName ref="geojson:grand_central_terminal">Grand Central Terminal</placeName>.
-        Enjoy nature at <placeName ref="geojson:central_park">Central Park</placeName>, the city's iconic green space.
-        Art lovers should explore the <placeName ref="geojson:museum_of_modern_art">Museum of Modern Art</placeName> and the grand <placeName ref="geojson:metropolitan_museum_of_art">Metropolitan Museum of Art</placeName>.
-        Don't miss <placeName ref="geojson:columbus_circle">Columbus Circle</placeName>, a major landmark and gateway to Central Park.
-        Experience the energy of <placeName ref="geojson:times_square">Times Square</placeName>, famous for its lights and crowds.
-        Finally, relax at <placeName ref="geojson:washington_square_park">Washington Square Park</placeName>, a lively spot in Greenwich Village.
+        <placeName ref="empire_state_building" lat="40.7484" lon="-73.9857">Empire State Building</placeName>, a towering landmark in Midtown Manhattan.
+        Next, visit the historic <placeName ref="statue_of_liberty" lat="40.6892" lon="-74.0445">Statue of Liberty</placeName> on Liberty Island, a symbol of freedom.
+        For a glimpse of New York's bustling transit, stop by <placeName ref="grand_central_terminal" lat="40.7527" lon="-73.9772">Grand Central Terminal</placeName>.
+        Enjoy nature at <placeName ref="central_park" lat="40.7829" lon="-73.9654">Central Park</placeName>, the city's iconic green space.
+        Art lovers should explore the <placeName ref="museum_of_modern_art" lat="40.7614" lon="-73.9787">Museum of Modern Art</placeName> and the grand <placeName ref="metropolitan_museum_of_art" lat="40.7794" lon="-73.9680">Metropolitan Museum of Art</placeName>.
+        Don't miss <placeName ref="columbus_circle" lat="40.7681" lon="-73.9819">Columbus Circle</placeName>, a major landmark and gateway to Central Park.
+        Experience the energy of <placeName ref="times_square" lat="40.7580" lon="-73.9851">Times Square</placeName>, famous for its lights and crowds.
+        Finally, relax at <placeName ref="washington_square_park" lat="40.7308" lon="-73.9978">Washington Square Park</placeName>, a lively spot in Greenwich Village.
       </p>
     </body>
   </text>
