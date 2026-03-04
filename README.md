@@ -10,8 +10,8 @@ Both approaches show how data from sources can be extracted, remediated, and pub
 
 ## Live Demo
 View the live demonstrations on GitHub Pages:
-- **[GeoJSON Demo](https://bds134.github.io/static-server/demo-geojson.html)** - Search and filter entities with interactive map
-- **[TEI XML Demo](https://bds134.github.io/static-server/demo-xml.html)** - Dynamic travel guide with markup parsing
+- **[GeoJSON Demo](https://bds134.github.io/static-server/demo-geojson.html)** - GeoJSON data structure with search and filter capabilities
+- **[TEI XML Demo](https://bds134.github.io/static-server/demo-xml.html)** - TEI XML-driven interactive map and linked text display
 
 ---
 
