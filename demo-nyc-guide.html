@@ -26,17 +26,7 @@
     <h2 class="mb-3">Map of Featured Sites</h2>
     <div id="tei-map" style="height: 300px; border-radius: 0.5em; margin-bottom: 2em;"></div>
     <h2 class="mb-3">Featured Sites (Marked-up Text)</h2>
-    <p>
-      Welcome to New York City! This travel guide will take you to some of the city's most famous sites:
-      <span class="site-link" data-ref="empire_state_building">Empire State Building</span>, a towering landmark in Midtown Manhattan.<br>
-      Next, visit the historic <span class="site-link" data-ref="statue_of_liberty">Statue of Liberty</span> on Liberty Island, a symbol of freedom.<br>
-      For a glimpse of New York's bustling transit, stop by <span class="site-link" data-ref="grand_central_terminal">Grand Central Terminal</span>.<br>
-      Enjoy nature at <span class="site-link" data-ref="central_park">Central Park</span>, the city's iconic green space.<br>
-      Art lovers should explore the <span class="site-link" data-ref="museum_of_modern_art">Museum of Modern Art</span> and the grand <span class="site-link" data-ref="metropolitan_museum_of_art">Metropolitan Museum of Art</span>.<br>
-      Don't miss <span class="site-link" data-ref="columbus_circle">Columbus Circle</span>, a major landmark and gateway to Central Park.<br>
-      Experience the energy of <span class="site-link" data-ref="times_square">Times Square</span>, famous for its lights and crowds.<br>
-      Finally, relax at <span class="site-link" data-ref="washington_square_park">Washington Square Park</span>, a lively spot in Greenwich Village.
-    </p>
+    <div id="featured-sites" style="line-height: 1.8;">Loading content from TEI XML...</div>
     <hr class="my-4">
     <h2 class="mb-3">Raw TEI XML</h2>
     <pre id="tei-xml-content" style="background:#181a1b; color:#e0e0e0; border-radius:0.5em; padding:1em; font-size:0.95em; overflow-x:auto;">Loading...</pre>
@@ -119,38 +109,72 @@
       markerRefs[key] = { marker, defaultIcon, redIcon };
     });
 
-    // Highlight site name and marker on click
-    document.querySelectorAll('.site-link').forEach(function(el) {
-      el.addEventListener('click', function() {
-        // Remove active from all site links
-        document.querySelectorAll('.site-link').forEach(e => e.classList.remove('active'));
-        el.classList.add('active');
-        // Reset all markers to default icon
-        Object.values(markerRefs).forEach(ref => ref.marker.setIcon(ref.defaultIcon));
-        // Pan map to marker and set red icon
-        const ref = el.getAttribute('data-ref');
-        if (markerRefs[ref]) {
-          map.setView(teiSites[ref].coords, 15);
-          markerRefs[ref].marker.setIcon(markerRefs[ref].redIcon);
-          markerRefs[ref].marker.openPopup();
-        }
+    // Function to attach click handlers to site links
+    function attachSiteLinkHandlers() {
+      document.querySelectorAll('.site-link').forEach(function(el) {
+        el.addEventListener('click', function() {
+          // Remove active from all site links
+          document.querySelectorAll('.site-link').forEach(e => e.classList.remove('active'));
+          el.classList.add('active');
+          // Reset all markers to default icon
+          Object.values(markerRefs).forEach(ref => ref.marker.setIcon(ref.defaultIcon));
+          // Pan map to marker and set red icon
+          const ref = el.getAttribute('data-ref');
+          if (markerRefs[ref]) {
+            map.setView(teiSites[ref].coords, 15);
+            markerRefs[ref].marker.setIcon(markerRefs[ref].redIcon);
+            markerRefs[ref].marker.openPopup();
+          }
+        });
       });
-    });
+    }
 
     // Load and display the TEI XML file
     fetch('demo-nyc-guide-tei.xml')
       .then(response => response.text())
       .then(xmlText => {
-        // Format the XML with proper indentation for display
+        // Parse the XML
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+        // Check for parsing errors
+        if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+          throw new Error('Failed to parse XML');
+        }
+
+        // Extract text and placeName elements from the paragraph
+        const pElement = xmlDoc.querySelector('body > p');
+        if (pElement) {
+          // Build featured sites HTML from XML
+          let htmlContent = '<p>';
+          
+          Array.from(pElement.childNodes).forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              // Regular text
+              htmlContent += node.textContent;
+            } else if (node.nodeName === 'placeName') {
+              // Extract ref and text
+              const ref = node.getAttribute('ref')?.replace('geojson:', '') || '';
+              const text = node.textContent;
+              htmlContent += `<span class="site-link" data-ref="${ref}">${text}</span>`;
+            }
+          });
+          
+          htmlContent += '</p>';
+          document.getElementById('featured-sites').innerHTML = htmlContent;
+
+          // Reattach click handlers to the newly created site links
+          attachSiteLinkHandlers();
+        }
+
+        // Format the XML for display
         const serializer = new XMLSerializer();
         const formattedXml = serializer.serializeToString(xmlDoc);
-        // Escape for HTML display
         const escaped = formattedXml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         document.getElementById('tei-xml-content').textContent = escaped;
       })
       .catch(error => {
+        document.getElementById('featured-sites').textContent = 'Error loading XML: ' + error.message;
         document.getElementById('tei-xml-content').textContent = 'Error loading XML: ' + error.message;
         console.error('Failed to load TEI XML:', error);
       });
