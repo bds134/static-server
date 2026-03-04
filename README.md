@@ -98,6 +98,45 @@ A student creates a TEI-marked travel guide to New York City, tagging major land
 - The page automatically fetches the XML, parses it, extracts coordinates from the attributes, and populates the map, featured sites links, and raw XML display.
 - No additional configuration is needed—all data is contained in the XML file itself.
 
+### Handling Repeated Place Mentions in Longer Texts
+
+For longer documents where the same place is mentioned multiple times, you can avoid repeating coordinates by defining places once in a `<places>` section (a sibling to `<text>`) and referencing them in the text:
+
+```xml
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt><title>NYC Travel Guide</title></titleStmt>
+      <publicationStmt><p>Demo</p></publicationStmt>
+      <sourceDesc><p>Original</p></sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <places>
+    <place xml:id="central_park" lat="40.7829" lon="-73.9654">
+      <placeName>Central Park</placeName>
+    </place>
+    <place xml:id="empire_state" lat="40.7484" lon="-73.9857">
+      <placeName>Empire State Building</placeName>
+    </place>
+  </places>
+  <text>
+    <body>
+      <p>
+        I visited <placeName ref="#central_park">Central Park</placeName> in the morning. 
+        Later, I returned to <placeName ref="#central_park">Central Park</placeName> at sunset.
+      </p>
+    </body>
+  </text>
+</TEI>
+```
+
+With this standard TEI structure:
+- The `<places>` section is a sibling to `<text>` (both children of `<TEI>`)
+- Each place is defined once with coordinates
+- Multiple mentions in the text use simple `ref="#place_id"` references
+- The code can look up coordinates from the `<places>` definitions
+- This is the TEI standard for handling repeated entities and following best practices
+
 ---
 
 ## Security
