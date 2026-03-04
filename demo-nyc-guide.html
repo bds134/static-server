@@ -167,9 +167,8 @@
           attachSiteLinkHandlers();
         }
 
-        // Display the raw XML by formatting the original text
-        const formattedXml = xmlText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        document.getElementById('tei-xml-content').textContent = formattedXml;
+        // Display the raw XML directly
+        document.getElementById('tei-xml-content').textContent = xmlText;
       })
       .catch(error => {
         document.getElementById('featured-sites').textContent = 'Error loading XML: ' + error.message;
