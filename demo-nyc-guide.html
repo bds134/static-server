@@ -143,7 +143,7 @@
         }
 
         // Extract text and placeName elements from the paragraph
-        const pElement = xmlDoc.querySelector('body > p');
+        const pElement = xmlDoc.querySelector('p');
         if (pElement) {
           // Build featured sites HTML from XML
           let htmlContent = '<p>';
@@ -167,11 +167,9 @@
           attachSiteLinkHandlers();
         }
 
-        // Format the XML for display
-        const serializer = new XMLSerializer();
-        const formattedXml = serializer.serializeToString(xmlDoc);
-        const escaped = formattedXml.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        document.getElementById('tei-xml-content').textContent = escaped;
+        // Display the raw XML by formatting the original text
+        const formattedXml = xmlText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        document.getElementById('tei-xml-content').textContent = formattedXml;
       })
       .catch(error => {
         document.getElementById('featured-sites').textContent = 'Error loading XML: ' + error.message;
