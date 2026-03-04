@@ -1,36 +1,34 @@
-# GeoJSON Map & Entity List Demo
+# Geographic Data Visualization Demo: GeoJSON & TEI XML Approaches
 
 ## Overview
-This test site demonstrates a simple workflow for visualizing geographic data extracted from historical sources. It uses a static GeoJSON file and a basic HTML/JavaScript frontend to display both a map and a searchable/filterable list of entities. The demo is intended as a proof-of-concept for students in digital history, showing how data from sources (such as medieval Latin texts) can be extracted, remediated, and published online.
+This test site demonstrates two complementary approaches for visualizing and interacting with historical geographic data extracted from historical sources:
 
-## Logic & Workflow
+1. **GeoJSON Approach** ([demo-geojson.html](demo-geojson.html)): A searchable/filterable list of entities with map visualization
+2. **TEI XML Approach** ([demo-nyc-guide.html](demo-nyc-guide.html)): An interactive travel guide that dynamically parses TEI XML to populate a map, links, and raw markup display
+
+Both approaches show how data from sources can be extracted, remediated, and published online as interactive, web-based experiences.
+
+---
+
+## Page 1: GeoJSON Map & Entity List ([demo-geojson.html](demo-geojson.html))
+
+### Logic & Workflow
 1. **Data Extraction**: Historical data (e.g., place names, events) is extracted from a source, possibly using OCR for printed or manuscript texts.
 2. **GeoJSON Remediation**: The extracted data is structured as a GeoJSON file, with each entity represented as a geographic feature (point) and associated properties (name, category, etc.).
 3. **Frontend Visualization**: The HTML page loads the GeoJSON, displays entities on a map (using Leaflet), and provides a searchable/filterable list. Users can filter by name or category, and download the filtered list as CSV.
 
-## Pros
+### Pros
 - **Simplicity**: No backend required; everything runs in the browser with static files.
 - **Transparency**: The data structure (GeoJSON) is open and easy to inspect or modify.
 - **Interactivity**: Users can search, filter, and download data.
 - **Extensibility**: The template can be adapted for more complex data, additional fields, or richer map features.
 
-## Cons
+### Cons
 - **Scalability**: Not suitable for large datasets or complex queries; all data is loaded into memory.
-- **Security**: No authentication or data protection; anyone can access and modify the files if hosted publicly. If the site is hosted from a Git repository (e.g., GitHub Pages), you can protect the branch (such as `main` or `gh-pages`) using branch protection rules. This prevents direct editing, force pushes, or unauthorized changes. Only users with specific permissions can make changes, and you can require pull requests, reviews, or CI checks before updates are merged. This helps secure your public site’s source code from unwanted edits.
 - **Limited Functionality**: This demo currently only shows point features and basic filtering. However, GeoJSON also supports polygons, lines, and other geometry types. You could extend the template to display polygons (such as regions or boundaries) or even overlay a rectified historical map (as a GeoTIFF or image layer) on the Leaflet map. Leaflet natively supports displaying polygons, lines, and raster images, so with some additional code, you can visualize more complex spatial data and historical maps alongside point features. No advanced spatial analysis or editing is included in this demo.
-- **Manual Data Preparation**: GeoJSON must be created manually or with custom scripts. OCR and remediation are not automated in this demo, but workflows using Google Cloud Vision or Tesseract can automate OCR for Latin texts. A script could help convert extracted data to GeoJSON, though entity recognition, geocoding, and historical context may require more advanced or manual intervention. Alternatively, a student could use TEI (Text Encoding Initiative) XML to mark entities directly in a text file. TEI is well-suited for encoding named entities, places, and other features in historical texts, and can be transformed into GeoJSON or other formats for visualization.
+- **Manual Data Preparation**: GeoJSON must be created manually or with custom scripts. OCR and remediation are not automated in this demo, but workflows using Google Cloud Vision or Tesseract can automate OCR for Latin texts. A script could help convert extracted data to GeoJSON, though entity recognition, geocoding, and historical context may require more advanced or manual intervention.
 
-## Example Use Case
-A student extracts place names and coordinates from a medieval Latin chronicle using OCR. The data is cleaned and formatted as GeoJSON, then visualized with this template. The result is a simple, interactive map and list that can be shared online, allowing exploration and download of the data.
-
-## How to Use
-- Place your GeoJSON file in the project folder.
-- Edit the HTML template as needed (e.g., add categories, change map center).
-- Open the HTML file in a browser, or serve it with a static file server.
-- Use the search and filter controls to explore the data.
-- Download the filtered entity list as CSV for further analysis.
-
-## Notes on Performance and Scalability
+### Notes on Performance and Scalability
 - For best results, keep the GeoJSON file under 1,000 features. Most browsers will load and render this amount quickly.
 - Loading delays may occur with 5,000+ features, and browser freezing is possible above 20,000 features.
 - The demo loads all data into memory and renders all features at once. For larger datasets, consider:
@@ -39,3 +37,68 @@ A student extracts place names and coordinates from a medieval Latin chronicle u
   - Leveraging database-backed or map server solutions (e.g., GeoServer, PostGIS)
 - Feature complexity (number of properties, geometry type) also affects performance.
 - Mobile devices and older computers may experience delays with fewer features than modern desktops.
+
+### Example Use Case
+A student extracts place names and coordinates from a medieval Latin chronicle using OCR. The data is cleaned and formatted as GeoJSON, then visualized with this template. The result is a simple, interactive map and list that can be shared online, allowing exploration and download of the data.
+
+### How to Use the GeoJSON Page
+- Place your GeoJSON file in the project folder.
+- Edit the HTML template as needed (e.g., add categories, change map center).
+- Open [demo-geojson.html](demo-geojson.html) in a browser, or serve it with a static file server.
+- Use the search and filter controls to explore the data.
+- Download the filtered entity list as CSV for further analysis.
+
+---
+
+## Page 2: TEI XML Travel Guide ([demo-nyc-guide.html](demo-nyc-guide.html))
+
+### Logic & Workflow
+1. **Data Markup**: Historical or descriptive text is marked up using TEI (Text Encoding Initiative) XML, with place names encoded as `<placeName>` elements and tagged with geospatial references.
+2. **Dynamic Parsing**: The HTML page fetches the TEI XML file and parses it in the browser using JavaScript.
+3. **Multi-use Visualization**: The parsed XML is used for three purposes simultaneously:
+   - **Interactive Map**: Place references are extracted and displayed as interactive markers on a Leaflet map
+   - **Linked Text**: The text content is rendered with clickable site links that highlight the corresponding map marker when clicked
+   - **Raw XML Display**: The original TEI markup is displayed for inspection and transparency
+
+### How It Works
+- The page loads the TEI XML file (e.g., `demo-nyc-guide-tei.xml`), which contains text with `<placeName>` elements marked with `ref` attributes (e.g., `ref="geojson:empire_state_building"`).
+- JavaScript extracts place names and their references, mapping each reference to coordinates in the `teiSites` JavaScript object.
+- The **Featured Sites (Marked-up Text)** section is dynamically populated by converting XML `<placeName>` elements into clickable `<span>` elements with appropriate CSS classes.
+- Clicking a site link highlights it visually (red) and pans the map to show the corresponding marker with a popup.
+- The **Map of Featured Sites** section renders all place references from the XML as interactive map markers.
+- The **Raw TEI XML** section displays the original XML file as plain text, preserving its structure for inspection and validation.
+
+### Pros
+- **Markup-Driven**: Data is stored in a human-readable, semantic markup language (TEI), making it easy to edit and understand.
+- **Multi-Purpose**: A single XML file serves as the source for map data, interactive text, and raw display—no duplication.
+- **Transparency**: Both the rendered content and the underlying markup are visible on the same page.
+- **Standardized Format**: TEI is a widely-used standard in digital humanities, making the data portable and compatible with other TEI tools and workflows.
+- **Flexibility**: Additional metadata can be added to `<placeName>` elements or other TEI tags without restructuring the visualization logic.
+
+### Cons
+- **Manual Markup**: TEI encoding must be done manually or with specialized tools. OCR solutions do not automatically produce TEI XML.
+- **Limited Scale**: Ideal for smaller, curated texts (e.g., travel guides, chronicles). Large documents with thousands of place names may become unwieldy.
+- **Hardcoded Coordinates**: Coordinate data for sites is currently hardcoded in the JavaScript `teiSites` object. A more scalable approach would fetch coordinates from an external GeoJSON file or database, or include coordinate data within the TEI XML itself.
+
+### Relationship to GeoJSON
+- Unlike the GeoJSON page ([demo-geojson.html](demo-geojson.html)), this page does not load a separate `.geojson` file for the map display.
+- Instead, coordinates are hardcoded in the `teiSites` JavaScript object, which maps site references (e.g., `empire_state_building`) to names and coordinates.
+- **Future enhancement**: Store coordinates in a GeoJSON file and load them dynamically, so the page can work with new sites without editing JavaScript code. This would bridge both approaches and allow the TEI page to be as data-driven as the GeoJSON page.
+
+### Example Use Case
+A student creates a TEI-marked travel guide to New York City, tagging major landmarks as `<placeName>` elements with unique refs. The guide is published using this template, allowing readers to click on landmarks in the text to see them highlighted on the map, and to view the underlying TEI markup for educational purposes.
+
+### How to Use the TEI Page
+- Create or edit a TEI XML file (e.g., `demo-nyc-guide-tei.xml`), marking place names with `<placeName ref="geojson:SITE_ID">` elements.
+- Update the `teiSites` object in [demo-nyc-guide.html](demo-nyc-guide.html) to include site coordinates for each reference ID you use in the XML.
+- The page automatically fetches the XML, parses it, and populates the map, featured sites links, and raw XML display.
+- No additional configuration is needed beyond updating these two data sources.
+
+---
+
+## Security
+
+When hosting either page publicly (e.g., GitHub Pages), you can protect your data source files using branch protection rules:
+- If the site is hosted from a Git repository (e.g., GitHub Pages), you can protect the branch (such as `main` or `gh-pages`) using branch protection rules. This prevents direct editing, force pushes, or unauthorized changes.
+- Only users with specific permissions can make changes, and you can require pull requests, reviews, or CI checks before updates are merged.
+- This helps secure your public site's source code from unwanted edits.
