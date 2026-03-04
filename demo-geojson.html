@@ -60,6 +60,8 @@
       color: #fff;
       text-shadow: 0 2px 8px #000;
     }
+    .site-link { color: #0d6efd; text-decoration: underline; cursor: pointer; transition: color 0.2s, background 0.2s; }
+    .site-link:hover { color: #0b5ed7; }
     nav.navbar { background: #23272b; border-bottom: 1px solid #343a40; }
     nav.navbar .navbar-brand { color: #fff !important; font-weight: bold; }
     nav.navbar .nav-link { color: #e0e0e0 !important; margin-right: 1rem; }
@@ -85,6 +87,12 @@
   </nav>
   <h1 class="mt-4 mb-4 text-center">GeoJSON Search & Map Demo</h1>
   <div class="card p-4 mb-4 shadow-sm">
+    <h2 class="mb-3">Map of Featured Sites</h2>
+    <div id="map" class="mb-3"></div>
+    <h2 class="mb-3">Featured Sites (GeoJSON Data)</h2>
+    <div id="featured-sites" style="line-height: 1.8;">Loading featured sites...</div>
+    <hr class="my-4">
+    <h2 class="mb-3">Search & Filter</h2>
     <form class="row g-3 align-items-center mb-3">
       <div class="col-md-6">
         <label for="search" class="form-label">Search by name:</label>
@@ -102,12 +110,13 @@
         </select>
       </div>
     </form>
-    <div id="map" class="mb-3"></div>
     <button id="download-csv" class="btn btn-primary mb-3">Download Filtered List as CSV</button>
     <div class="entity-list" id="entity-list">
       <!-- Entities will be listed here. Use search and category to filter. -->
     </div>
-  </div>
+    <hr class="my-4">
+    <h2 class="mb-3">Raw GeoJSON</h2>
+    <pre id="geojson-content" style="background:#181a1b; color:#e0e0e0; border-radius:0.5em; padding:1em; font-size:0.95em; overflow-x:auto;">Loading...</pre>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     let geojsonData;
@@ -122,6 +131,10 @@
       .then(data => {
         geojsonData = data;
         initMap();
+        // Display raw GeoJSON
+        document.getElementById('geojson-content').textContent = JSON.stringify(geojsonData, null, 2);
+        // Build featured sites from GeoJSON
+        buildFeaturedSites();
         // Show all entities on initial load
         updateListAndMap('', '');
       })
@@ -137,6 +150,43 @@
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
       markersLayer = L.layerGroup().addTo(map);
+    }
+
+    // Build featured sites section from GeoJSON
+    function buildFeaturedSites() {
+      const featuredDiv = document.getElementById('featured-sites');
+      const htmlContent = `
+        <p>
+          Welcome to New York City! This travel guide will take you to some of the city's most famous sites:
+          <span class="site-link" data-site-name="Empire State Building">Empire State Building</span>, a towering landmark in Midtown Manhattan.<br>
+          Next, visit the historic <span class="site-link" data-site-name="Statue of Liberty">Statue of Liberty</span> on Liberty Island, a symbol of freedom.<br>
+          For a glimpse of New York's bustling transit, stop by <span class="site-link" data-site-name="Grand Central Terminal">Grand Central Terminal</span>.<br>
+          Enjoy nature at <span class="site-link" data-site-name="Central Park">Central Park</span>, the city's iconic green space.<br>
+          Art lovers should explore the <span class="site-link" data-site-name="Museum of Modern Art">Museum of Modern Art</span> and the grand <span class="site-link" data-site-name="Metropolitan Museum of Art">Metropolitan Museum of Art</span>.<br>
+          Don't miss <span class="site-link" data-site-name="Columbus Circle">Columbus Circle</span>, a major landmark and gateway to Central Park.<br>
+          Experience the energy of <span class="site-link" data-site-name="Times Square">Times Square</span>, famous for its lights and crowds.<br>
+          Finally, relax at <span class="site-link" data-site-name="Washington Square Park">Washington Square Park</span>, a lively spot in Greenwich Village.
+        </p>
+      `;
+      
+      featuredDiv.innerHTML = htmlContent;
+
+      // Attach click handlers to featured site links
+      document.querySelectorAll('#featured-sites .site-link').forEach(el => {
+        el.addEventListener('click', function() {
+          const siteName = this.getAttribute('data-site-name');
+          const feature = geojsonData.features.find(f => f.properties.name === siteName);
+          if (feature) {
+            const coords = feature.geometry.coordinates;
+            map.setView([coords[1], coords[0]], 15);
+            // Clear and show only this marker
+            markersLayer.clearLayers();
+            const marker = L.marker([coords[1], coords[0]]).addTo(markersLayer);
+            marker.bindPopup(`<b>${siteName}</b><br>${feature.properties.category}`);
+            marker.openPopup();
+          }
+        });
+      });
     }
 
     // Update entity list and map markers
@@ -187,6 +237,12 @@
     }
     searchInput.addEventListener('input', triggerUpdate);
     categorySelect.addEventListener('change', triggerUpdate);
+    
+    // Invalidate map size after content loads
+    setTimeout(function() {
+      map.invalidateSize();
+    }, 500);
+    
     // Download CSV feature
     document.getElementById('download-csv').addEventListener('click', function() {
       if (!lastFilteredFeatures || lastFilteredFeatures.length === 0) {
