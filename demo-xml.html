@@ -20,23 +20,74 @@
     nav.navbar .nav-link { color: #e0e0e0 !important; margin-right: 1rem; }
     nav.navbar .nav-link:hover { color: #fff !important; }
     nav.navbar .nav-link.active { color: #0d6efd !important; font-weight: bold; }
+    /* Responsive hamburger styles */
+    .navbar-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .navbar-toggle .bar {
+      width: 28px;
+      height: 4px;
+      background: #fff;
+      margin: 4px 0;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    .navbar-links {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar-links li {
+      margin-left: 1em;
+    }
+    .navbar-links a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-size: 1em;
+    }
+    @media (max-width: 600px) {
+      .navbar .navbar-nav,
+      .navbar-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: #23272b;
+        position: absolute;
+        top: 56px;
+        left: 0;
+        z-index: 1000;
+      }
+      .navbar-links.active {
+        display: flex;
+      }
+      .navbar-toggle {
+        display: flex;
+      }
+    }
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-sm">
-    <div class="container-fluid">
-      <span class="navbar-brand">📍 Geo Data Viz</span>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="demo-geojson.html">GeoJSON Demo</a></li>
-          <li class="nav-item"><a class="nav-link active" href="demo-xml.html">TEI XML Demo</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://github.com/bds134/static-server" target="_blank">Documentation</a></li>
-        </ul>
-      </div>
-    </div>
+  <nav class="navbar">
+    <div class="navbar-brand">📍 Geo Data Viz</div>
+    <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <ul class="navbar-links" id="navbar-links">
+      <li><a href="demo-geojson.html">GeoJSON Demo</a></li>
+      <li><a class="active" href="demo-xml.html">TEI XML Demo</a></li>
+      <li><a href="https://github.com/bds134/static-server" target="_blank">Documentation</a></li>
+    </ul>
   </nav>
   <h1 class="mt-4 mb-4 text-center">NYC Travel Guide (TEI XML)</h1>
   <div class="card p-4 mb-4 shadow-sm">
@@ -53,6 +104,16 @@
   </div>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
+    // Hamburger menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggle = document.getElementById('navbar-toggle');
+      var links = document.getElementById('navbar-links');
+      if (toggle && links) {
+        toggle.addEventListener('click', function() {
+          links.classList.toggle('active');
+        });
+      }
+    });
     // Initialize Leaflet map
     const map = L.map('tei-map').setView([40.75, -73.98], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
