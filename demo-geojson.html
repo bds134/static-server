@@ -36,6 +36,18 @@
       }
     });
   </script>
+  <script>
+    // highlight active nav link based on current filename
+    document.addEventListener('DOMContentLoaded', function() {
+      var links = document.querySelectorAll('.navbar-links a');
+      var current = window.location.pathname.split('/').pop();
+      links.forEach(function(link) {
+        if (link.getAttribute('href') === current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
 
   <h1 class="mt-4 mb-4 text-center">GeoJSON Demo</h1>
     <div class="card p-4 mb-4 shadow-sm">
