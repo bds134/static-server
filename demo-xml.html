@@ -41,8 +41,10 @@
     document.addEventListener('DOMContentLoaded', function() {
       var links = document.querySelectorAll('.navbar-links a');
       var current = window.location.pathname.split('/').pop();
+      if (!current) current = 'demo-xml.html';
       links.forEach(function(link) {
-        if (link.getAttribute('href') === current) {
+        var href = link.getAttribute('href').split('?')[0];
+        if (href === current) {
           link.classList.add('active');
         }
       });

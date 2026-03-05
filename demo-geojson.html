@@ -41,8 +41,11 @@
     document.addEventListener('DOMContentLoaded', function() {
       var links = document.querySelectorAll('.navbar-links a');
       var current = window.location.pathname.split('/').pop();
+      if (!current) current = 'demo-geojson.html';
       links.forEach(function(link) {
-        if (link.getAttribute('href') === current) {
+        // strip query params from href if present
+        var href = link.getAttribute('href').split('?')[0];
+        if (href === current) {
           link.classList.add('active');
         }
       });
