@@ -6,7 +6,7 @@ This test site demonstrates two complementary approaches for visualizing and int
 1. **GeoJSON Approach** ([demo-geojson.html](demo-geojson.html)): An interactive travel guide driven by GeoJSON data with searchable/filterable list of entities and map visualization
 2. **TEI XML Approach** ([demo-xml.html](demo-xml.html)): An interactive travel guide that dynamically parses TEI XML to populate a map, links, and raw markup display
 
-Both approaches show how data from sources can be extracted, remediated, and published online as interactive, web-based experiences.
+Both approaches show how a static, serverless webpage can display data from sources and can be published online as interactive, web-based experiences. By 'serverless', we mean that the pages can be hosted on any static file server (e.g., GitHub Pages) without needing a backend or database. All data is stored in static files (GeoJSON or TEI XML) and loaded directly in the browser. This makes it easy (and free!) to publish and share these interactive visualizations online.
 
 ## Live Demo
 View the live demonstrations on GitHub Pages:
