@@ -1,28 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo GeoJSON</title>
-    <style>
-        /* Existing styles */
-        #navbar {
-            display: none; /* Default hidden  */
-        }
-        /* iPhone SE portrait mode */
-        @media only screen and (max-width: 375px) {
-            #navbar {
-                display: block; /* Show navbar in portrait mode */
-            }
-        }
-    </style>
+    <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
 </head>
 <body>
-    <div id="navbar">
-        <h1>Navbar</h1>
-    </div>
-    <div id="main-content">
-        <p>This is a demo GeoJSON page.</p>
-    </div>
+    <h1>Demo GeoJSON Feature</h1>
+    <div id="map" style="width: 100%; height: 500px;"></div>
+
+    <script>
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                }),
+                new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        features: [
+                            new ol.Feature({
+                                geometry: new ol.geom.Point(ol.proj.fromLonLat([0, 0]))
+                            })
+                        ]
+                    })
+                })
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([0, 0]),
+                zoom: 2
+            })
+        });
+    </script>
 </body>
 </html>
