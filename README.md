@@ -95,7 +95,10 @@ gdf.to_file('places.geojson', driver='GeoJSON')
 
 ### How It Works
 - The page loads the TEI XML file (e.g., `demo-nyc-guide-tei.xml`), which contains text with `<placeName>` elements marked with `ref`, `lat`, and `lon` attributes.
-- Example: `<placeName ref="empire_state_building" lat="40.7484" lon="-73.9857">Empire State Building</placeName>`
+- Example: 
+```xml
+<placeName ref="empire_state_building" lat="40.7484" lon="-73.9857">Empire State Building</placeName>
+```
 - JavaScript extracts place names and their geospatial coordinates directly from the XML attributes—no separate hardcoded mapping is needed.
 - The **Featured Sites (Marked-up Text)** section is dynamically populated by converting XML `<placeName>` elements into clickable `<span>` elements with appropriate CSS classes.
 - Clicking a site link highlights it visually (red) and pans the map to show the corresponding marker with a popup.
@@ -110,7 +113,7 @@ gdf.to_file('places.geojson', driver='GeoJSON')
 - **Flexibility**: Additional metadata can be added to `<placeName>` elements or other TEI tags without restructuring the visualization logic.
 
 ### Cons
-- **Manual Markup**: TEI encoding must be done manually or with specialized tools. OCR solutions do not automatically produce TEI XML.
+- **Manual Markup**: TEI encoding must be done manually or with specialized tools. OCR solutions do not automatically produce TEI XML. [For most historians, this is a huge plus! The process of encoding a text in TEI is often a critical part of the research and analysis, allowing scholars to engage deeply with the material.]
 - **Limited Scale**: Ideal for smaller, curated texts (e.g., travel guides, chronicles). Large documents with thousands of place names may become unwieldy.
 
 ### Self-Contained Data Model
@@ -169,12 +172,3 @@ With this standard TEI structure:
 - Multiple mentions in the text use simple `ref="#place_id"` references
 - The code can look up coordinates from the `<places>` definitions
 - This is the TEI standard for handling repeated entities and following best practices
-
----
-
-## Security
-
-When hosting either page publicly (e.g., GitHub Pages), you can protect your data source files using branch protection rules:
-- If the site is hosted from a Git repository (e.g., GitHub Pages), you can protect the branch (such as `main` or `gh-pages`) using branch protection rules. This prevents direct editing, force pushes, or unauthorized changes.
-- Only users with specific permissions can make changes, and you can require pull requests, reviews, or CI checks before updates are merged.
-- This helps secure your public site's source code from unwanted edits.
