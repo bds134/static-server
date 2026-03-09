@@ -8,37 +8,50 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/bootstrap-dark.min.css" rel="stylesheet" crossorigin="anonymous">
-  <style>
-    body { background: #181a1b; color: #e0e0e0; max-width: 700px; margin: auto; }
-    .card { background: #23272b; border: 1px solid #343a40; color: #e0e0e0; }
-    h1 { color: #fff; text-shadow: 0 2px 8px #000; }
-    .site-link { color: #0d6efd; text-decoration: underline; cursor: pointer; transition: color 0.2s, background 0.2s; }
-    .site-link.active { color: #ff3b3b !important; background: #23272b !important; }
-    .site-link:hover { color: #0b5ed7; }
-    nav.navbar { background: #23272b; border-bottom: 1px solid #343a40; }
-    nav.navbar .navbar-brand { color: #fff !important; font-weight: bold; }
-    nav.navbar .nav-link { color: #e0e0e0 !important; margin-right: 1rem; }
-    nav.navbar .nav-link:hover { color: #fff !important; }
-    nav.navbar .nav-link.active { color: #0d6efd !important; font-weight: bold; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-sm">
-    <div class="container-fluid">
-      <span class="navbar-brand">📍 Geo Data Viz</span>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="demo-geojson.html">GeoJSON Demo</a></li>
-          <li class="nav-item"><a class="nav-link active" href="demo-xml.html">TEI XML Demo</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://github.com/bds134/static-server" target="_blank">Documentation</a></li>
-        </ul>
-      </div>
-    </div>
+  <nav class="navbar">
+    <div class="navbar-brand">📍 Geo Data Viz</div>
+    <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <ul class="navbar-links" id="navbar-links">
+      <li><a href="demo-geojson.html">GeoJSON Demo</a></li>
+      <li><a href="demo-xml.html">TEI XML Demo</a></li>
+      <li><a href="https://github.com/bds134/static-server" target="_blank">Documentation</a></li>
+    </ul>
   </nav>
-  <h1 class="mt-4 mb-4 text-center">NYC Travel Guide (TEI XML)</h1>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggle = document.getElementById('navbar-toggle');
+      var links = document.getElementById('navbar-links');
+      if (toggle && links) {
+        toggle.addEventListener('click', function() {
+          links.classList.toggle('active');
+        });
+      }
+    });
+  </script>
+  <script>
+    // highlight active nav link based on current filename
+    document.addEventListener('DOMContentLoaded', function() {
+      var links = document.querySelectorAll('.navbar-links a');
+      var current = window.location.pathname.split('/').pop();
+      if (!current) current = 'demo-xml.html';
+      links.forEach(function(link) {
+        var href = link.getAttribute('href').split('?')[0];
+        if (href === current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+  <h1 class="mt-4 mb-4 text-center">TEI XML Demo</h1>
   <div class="card p-4 mb-4 shadow-sm">
     <h2 class="mb-3">Map of Featured Sites</h2>
     <div id="tei-map" style="height: 300px; border-radius: 0.5em; margin-bottom: 2em;"></div>
@@ -53,7 +66,6 @@
   </div>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // Initialize Leaflet map
     const map = L.map('tei-map').setView([40.75, -73.98], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'

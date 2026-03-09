@@ -8,116 +8,82 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/bootstrap-dark.min.css" rel="stylesheet" crossorigin="anonymous">
-  <style>
-    #map { height: 300px; margin-top: 1em; border-radius: 0.5em; }
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 700px;
-      margin: auto;
-      background: #181a1b;
-      color: #e0e0e0;
-    }
-    .card {
-      background: #23272b;
-      border: 1px solid #343a40;
-      color: #e0e0e0;
-    }
-    .form-label, .form-select, .form-control {
-      color: #e0e0e0;
-      background: #23272b;
-      border: 1px solid #343a40;
-    }
-    .form-select:focus, .form-control:focus {
-      background: #181a1b;
-      color: #fff;
-      border-color: #495057;
-      box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-    }
-    .entity-list {
-      margin-top: 1em;
-    }
-    .entity-item {
-      margin-bottom: 0.5em;
-      padding: 0.5em 1em;
-      background: #23272b;
-      border-radius: 0.25em;
-      border: 1px solid #343a40;
-      color: #e0e0e0;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      transition: background 0.2s;
-    }
-    .entity-item:hover {
-      background: #343a40;
-    }
-    #download-csv.btn {
-      background: #0d6efd;
-      border: none;
-      color: #fff;
-    }
-    #download-csv.btn:hover {
-      background: #0b5ed7;
-    }
-    h1 {
-      color: #fff;
-      text-shadow: 0 2px 8px #000;
-    }
-    .site-link { color: #0d6efd; text-decoration: underline; cursor: pointer; transition: color 0.2s, background 0.2s; }
-    .site-link:hover { color: #0b5ed7; }
-    nav.navbar { background: #23272b; border-bottom: 1px solid #343a40; }
-    nav.navbar .navbar-brand { color: #fff !important; font-weight: bold; }
-    nav.navbar .nav-link { color: #e0e0e0 !important; margin-right: 1rem; }
-    nav.navbar .nav-link:hover { color: #fff !important; }
-    nav.navbar .nav-link.active { color: #0d6efd !important; font-weight: bold; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-sm">
-    <div class="container-fluid">
-      <span class="navbar-brand">📍 Geo Data Viz</span>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="demo-geojson.html">GeoJSON Demo</a></li>
-          <li class="nav-item"><a class="nav-link" href="demo-xml.html">TEI XML Demo</a></li>
-          <li class="nav-item"><a class="nav-link" href="https://github.com/bds134/static-server" target="_blank">Documentation</a></li>
-        </ul>
-      </div>
-    </div>
+  <nav class="navbar">
+    <div class="navbar-brand">📍 Geo Data Viz</div>
+    <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <ul class="navbar-links" id="navbar-links">
+      <li><a href="demo-geojson.html">GeoJSON Demo</a></li>
+      <li><a href="demo-xml.html">TEI XML Demo</a></li>
+      <li><a href="https://github.com/bds134/static-server" target="_blank">Documentation</a></li>
+    </ul>
   </nav>
-  <h1 class="mt-4 mb-4 text-center">GeoJSON Search & Map Demo</h1>
-  <div class="card p-4 mb-4 shadow-sm">
-    <h2 class="mb-3">Map of Featured Sites</h2>
-    <div id="map" class="mb-3"></div>
-    <h2 class="mb-3">Featured Sites (GeoJSON Data)</h2>
-    <div id="featured-sites" style="line-height: 1.8;">Loading featured sites...</div>
-    <hr class="my-4">
-    <h2 class="mb-3">Search & Filter</h2>
-    <form class="row g-3 align-items-center mb-3">
-      <div class="col-md-6">
-        <label for="search" class="form-label">Search by name:</label>
-        <input type="text" id="search" class="form-control" placeholder="Type to search..." />
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggle = document.getElementById('navbar-toggle');
+      var links = document.getElementById('navbar-links');
+      if (toggle && links) {
+        toggle.addEventListener('click', function() {
+          links.classList.toggle('active');
+        });
+      }
+    });
+  </script>
+  <script>
+    // highlight active nav link based on current filename
+    document.addEventListener('DOMContentLoaded', function() {
+      var links = document.querySelectorAll('.navbar-links a');
+      var current = window.location.pathname.split('/').pop();
+      if (!current) current = 'demo-geojson.html';
+      links.forEach(function(link) {
+        // strip query params from href if present
+        var href = link.getAttribute('href').split('?')[0];
+        if (href === current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+  <h1 class="mt-4 mb-4 text-center">GeoJSON Demo</h1>
+    <div class="card p-4 mb-4 shadow-sm">
+      <h2 class="mb-3">Map of Featured Sites</h2>
+      <div id="map" class="mb-3"></div>
+      <h2 class="mb-3">Featured Sites (GeoJSON Data)</h2>
+      <div id="featured-sites" style="line-height: 1.8;">Loading featured sites...</div>
+      <hr class="my-4">
+      <h2 class="mb-3">Search & Filter</h2>
+      <form class="row g-3 align-items-center mb-3">
+        <div class="col-md-6">
+          <label for="search" class="form-label">Search by name:</label>
+          <input type="text" id="search" class="form-control" placeholder="Type to search..." />
+        </div>
+        <div class="col-md-6">
+          <label for="category" class="form-label">Category:</label>
+          <select id="category" class="form-select">
+            <option value="">All</option>
+            <option value="Landmark">Landmark</option>
+            <option value="Monument">Monument</option>
+            <option value="Transport">Transport</option>
+            <option value="Park">Park</option>
+            <option value="Museum">Museum</option>
+          </select>
+        </div>
+      </form>
+      <button id="download-csv" class="btn btn-primary mb-3">Download Filtered List as CSV</button>
+      <div class="entity-list" id="entity-list">
+        <!-- Entities will be listed here. Use search and category to filter. -->
       </div>
-      <div class="col-md-6">
-        <label for="category" class="form-label">Category:</label>
-        <select id="category" class="form-select">
-          <option value="">All</option>
-          <option value="Landmark">Landmark</option>
-          <option value="Monument">Monument</option>
-          <option value="Transport">Transport</option>
-          <option value="Park">Park</option>
-          <option value="Museum">Museum</option>
-        </select>
-      </div>
-    </form>
-    <button id="download-csv" class="btn btn-primary mb-3">Download Filtered List as CSV</button>
-    <div class="entity-list" id="entity-list">
-      <!-- Entities will be listed here. Use search and category to filter. -->
-    </div>
-    <hr class="my-4">
-    <h2 class="mb-3">Raw GeoJSON</h2>
-    <pre id="geojson-content" style="background:#181a1b; color:#e0e0e0; border-radius:0.5em; padding:1em; font-size:0.95em; overflow-x:auto;">Loading...</pre>
+      <hr class="my-4">
+      <h2 class="mb-3">Raw GeoJSON</h2>
+      <pre id="geojson-content" style="background:#181a1b; color:#e0e0e0; border-radius:0.5em; padding:1em; font-size:0.95em; overflow-x:auto;">Loading...</pre>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     let geojsonData;
